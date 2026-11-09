@@ -306,10 +306,13 @@ const GimmyApp = {
 
   async desmarcarTodos() {
     if (!this.listaAtiva.itens || this.listaAtiva.itens.length === 0) return;
-    this.listaAtiva.itens.forEach(i => i.comprado = false);
+    this.listaAtiva.itens.forEach(i => {
+      i.comprado = false;
+      i.lembrete = ''; // Lembretes efêmeros: limpos para a nova compra
+    });
     await GimmyDB.salvarListaAtiva(this.listaAtiva);
     this.renderShoppingList();
-    this.showToast('Todos os itens foram desmarcados!');
+    this.showToast('Lista pronta para nova compra (lembretes zerados)!');
   },
 
   async limparLista() {
