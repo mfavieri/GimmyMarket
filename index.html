@@ -129,6 +129,14 @@
         </div>
       </div>
 
+      <!-- Botão Permanente para Inserir Novos Produtos -->
+      <div class="insert-product-bar">
+        <button class="btn-insert-new-product" onclick="GimmyApp.focarBuscaNovoProduto()">
+          <span style="font-size: 1.2rem;">➕</span>
+          <span>Inserir Produto na Lista</span>
+        </button>
+      </div>
+
       <!-- Lista de Compras Agrupada e Ordenada -->
       <div id="shoppingListContainer">
         <!-- Injetado dinamicamente: Seções dos grupos ordenados pelo supermercado -->
@@ -143,6 +151,10 @@
 
       <!-- Ações da Lista -->
       <div class="list-quick-actions" id="listActionsBar">
+        <button class="btn-action-sec btn-action-primary" onclick="GimmyApp.focarBuscaNovoProduto()">
+          <span>➕</span>
+          <span>Inserir Item</span>
+        </button>
         <button class="btn-action-sec" onclick="GimmyApp.compartilharLista()">
           <span>📤</span>
           <span>Compartilhar</span>
@@ -153,7 +165,7 @@
         </button>
         <button class="btn-action-sec btn-action-danger" onclick="GimmyApp.limparLista()">
           <span>🗑️</span>
-          <span>Limpar Lista</span>
+          <span>Limpar</span>
         </button>
       </div>
 
