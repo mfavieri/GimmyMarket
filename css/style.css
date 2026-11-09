@@ -1,0 +1,817 @@
+/* GimmyMarket - Estilos e Interface Mobile-First */
+
+:root {
+  --primary: #10b981;
+  --primary-dark: #059669;
+  --primary-light: #d1fae5;
+  --accent: #f59e0b;
+  --accent-light: #fef3c7;
+  --danger: #ef4444;
+  --danger-light: #fee2e2;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --border-focus: #10b981;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg);
+  color: var(--text-main);
+  line-height: 1.5;
+  padding-bottom: 80px;
+}
+
+/* Header Principal */
+.app-header {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-md);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.brand-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.brand-badge {
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Navegação entre Módulos */
+.module-nav {
+  display: flex;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  margin-top: 12px;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.module-nav-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.module-nav-btn.active {
+  background: white;
+  color: var(--primary-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.module-nav-btn .highlight-tag {
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+/* Container Geral */
+.main-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Telas/Módulos */
+.module-view {
+  display: none;
+}
+
+.module-view.active {
+  display: block;
+}
+
+/* Módulo de Compras: Barra de Busca Inteligente */
+.search-box-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 44px 14px 46px;
+  font-size: 1.05rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  outline: none;
+  background: #fdfdfd;
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  display: none;
+}
+
+.search-tip {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Resultados Rápidos da Busca */
+.search-results-panel {
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  margin-top: 10px;
+  max-height: 380px;
+  overflow-y: auto;
+  display: none;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.res-prod-info {
+  flex: 1;
+}
+
+.res-prod-nome {
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--text-main);
+}
+
+.res-prod-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.res-prod-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Controles de Quantidade */
+.qty-stepper {
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.qty-btn {
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--text-main);
+}
+
+.qty-btn:active {
+  background: var(--border);
+}
+
+.qty-input {
+  width: 36px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.btn-add-item {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.15s ease;
+}
+
+.btn-add-item:hover {
+  background: var(--primary-dark);
+}
+
+/* Card de Seleção do Supermercado & Modo de Roteiro */
+.supermarket-selector-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sm-label-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text-main);
+}
+
+.sm-select {
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  outline: none;
+  cursor: pointer;
+}
+
+.sm-select:focus {
+  border-color: var(--primary);
+}
+
+/* Barra de Progresso e Métricas */
+.shopping-progress-card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.progress-bar-bg {
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #059669);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.filter-pill {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.filter-pill.active {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border-color: var(--primary);
+}
+
+/* Lista de Compras Agrupada */
+.group-section {
+  margin-bottom: 20px;
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 4px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main);
+  border-bottom: 2px solid var(--border);
+}
+
+.group-title-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.group-counter {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--border);
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: var(--text-muted);
+}
+
+/* Item da Lista de Compras */
+.shopping-item {
+  background: var(--card-bg);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.shopping-item.purchased {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  opacity: 0.72;
+}
+
+.shopping-item.purchased .item-name {
+  text-decoration: line-through;
+  color: #64748b;
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  cursor: pointer;
+}
+
+.item-checkbox {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: transparent;
+  background: white;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.shopping-item.purchased .item-checkbox {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.item-details {
+  flex: 1;
+}
+
+.item-name {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.item-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.item-badge-apres {
+  background: #e2e8f0;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.item-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon-del {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  transition: color 0.15s;
+}
+
+.btn-icon-del:hover {
+  color: var(--danger);
+  background: var(--danger-light);
+}
+
+/* Estado Vazio */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--border);
+  margin-top: 10px;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+}
+
+.empty-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.empty-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* Ações Rápidas de Rodapé da Lista */
+.list-quick-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-action-sec {
+  flex: 1;
+  background: white;
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-action-sec:hover {
+  background: #f1f5f9;
+}
+
+.btn-action-danger {
+  color: var(--danger);
+  border-color: #fecaca;
+}
+
+.btn-action-danger:hover {
+  background: var(--danger-light);
+}
+
+/* ========================================================
+   MÓDULO DE CONFIGURAÇÃO (Alma do Sistema)
+   ======================================================== */
+.config-tabs {
+  display: flex;
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 4px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+
+.config-tab-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.config-tab-btn.active {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.config-subview {
+  display: none;
+}
+
+.config-subview.active {
+  display: block;
+}
+
+/* Cards de Configuração */
+.config-card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
+}
+
+.config-card-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Formulários */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text-main);
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  background: #fff;
+  font-family: inherit;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.btn-submit {
+  width: 100%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-submit:hover {
+  background: var(--primary-dark);
+}
+
+/* Listagem de Itens nas Configurações */
+.config-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.config-item-row:last-child {
+  border-bottom: none;
+}
+
+.config-item-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.config-item-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* Reordenação de Roteiro do Supermercado */
+.route-order-list {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.route-order-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+
+.route-item-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.route-item-index {
+  background: white;
+  border: 1px solid var(--border);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.btn-arrow {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-arrow:hover {
+  background: #f1f5f9;
+}
+
+/* Notificação Toast */
+.toast-notice {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #0f172a;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.toast-notice.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+

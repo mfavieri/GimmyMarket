@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.2" />
+    </filter>
+  </defs>
+  
+  <!-- Fundo Circular com Gradiente -->
+  <rect width="512" height="512" rx="128" fill="url(#grad)" />
+  
+  <!-- Carrinho de Compras Estilizado -->
+  <g filter="url(#shadow)" fill="none" stroke="#ffffff" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cesta do Carrinho -->
+    <path d="M120 140 h 64 l 36 170 h 180 l 32 -130 h -230" />
+    <!-- Rodas -->
+    <circle cx="230" cy="370" r="22" fill="#ffffff" stroke="none" />
+    <circle cx="370" cy="370" r="22" fill="#ffffff" stroke="none" />
+    <!-- Checkmark de Inteligência / Sucesso no Centro -->
+    <path d="M260 215 l 30 30 l 65 -65" stroke="#fef08a" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>
+

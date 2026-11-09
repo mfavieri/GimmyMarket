@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#059669">
+  <meta name="description" content="GimmyMarket - Anotação inteligente e roteiro de compras de supermercado 100% offline">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <title>GimmyMarket - Compras Inteligentes</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Topo do App -->
+  <header class="app-header">
+    <div class="header-brand">
+      <div class="brand-title">
+        <span>🛒</span>
+        <span>GimmyMarket</span>
+      </div>
+      <span class="brand-badge" id="offlineStatus">100% Offline</span>
+    </div>
+
+    <!-- Seletor dos Módulos Principais -->
+    <nav class="module-nav" role="tablist">
+      <button class="module-nav-btn active" id="btnNavCompra" onclick="GimmyApp.switchModule('compra')">
+        <span>🛒 Compras</span>
+        <span class="highlight-tag">Mais Usado</span>
+      </button>
+      <button class="module-nav-btn" id="btnNavConfig" onclick="GimmyApp.switchModule('config')">
+        <span>⚙️ Configuração</span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="main-container">
+
+    <!-- ==========================================
+         1. MÓDULO DE COMPRAS (Uso Principal)
+         ========================================== -->
+    <section id="moduleCompra" class="module-view active">
+
+      <!-- Caixa de Pesquisa Inteligente -->
+      <div class="search-box-card">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="search" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Buscar produto ou marca (ex: Detergente, ODD, Coca)..." 
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+          >
+          <button id="clearSearchBtn" class="clear-search-btn" title="Limpar busca">✕</button>
+        </div>
+        <div class="search-tip">
+          <span>💡</span>
+          <span>Dica: Digite o tipo (ex: <i>Detergente</i>) ou a marca (ex: <i>ODD, Ypê</i>).</span>
+        </div>
+
+        <!-- Painel de Resultados da Busca -->
+        <div id="searchResultsPanel" class="search-results-panel">
+          <!-- Injetado dinamicamente via JS -->
+        </div>
+      </div>
+
+      <!-- Seletor do Supermercado & Roteiro -->
+      <div class="supermarket-selector-card">
+        <div class="sm-label-group">
+          <span>📍</span>
+          <span>Supermercado:</span>
+        </div>
+        <select id="supermarketSelect" class="sm-select" onchange="GimmyApp.onSelectSupermarket(this.value)">
+          <!-- Opções preenchidas pelo DB -->
+        </select>
+      </div>
+
+      <!-- Barra de Progresso do Carrinho -->
+      <div class="shopping-progress-card">
+        <div class="progress-header">
+          <span id="progressSummaryText">0 itens na lista</span>
+          <span id="progressPercentText" style="color: var(--primary-dark);">0% no carrinho</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progressBarFill" class="progress-bar-fill"></div>
+        </div>
+
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="todos" onclick="GimmyApp.setFilter('todos', this)">Todos</button>
+          <button class="filter-pill" data-filter="pendentes" onclick="GimmyApp.setFilter('pendentes', this)">Falta Comprar</button>
+          <button class="filter-pill" data-filter="carrinho" onclick="GimmyApp.setFilter('carrinho', this)">No Carrinho 🛒</button>
+        </div>
+      </div>
+
+      <!-- Lista de Compras Agrupada e Ordenada -->
+      <div id="shoppingListContainer">
+        <!-- Injetado dinamicamente: Seções dos grupos ordenados pelo supermercado -->
+      </div>
+
+      <!-- Estado Vazio quando não há itens -->
+      <div id="emptyListState" class="empty-state" style="display: none;">
+        <div class="empty-icon">📝</div>
+        <h3 class="empty-title">Sua lista está vazia</h3>
+        <p class="empty-desc">Use a caixa de busca acima para pesquisar e adicionar produtos em segundos!</p>
+      </div>
+
+      <!-- Ações da Lista -->
+      <div class="list-quick-actions" id="listActionsBar">
+        <button class="btn-action-sec" onclick="GimmyApp.compartilharLista()">
+          <span>📤</span>
+          <span>Compartilhar</span>
+        </button>
+        <button class="btn-action-sec" onclick="GimmyApp.desmarcarTodos()">
+          <span>↩️</span>
+          <span>Desmarcar Todos</span>
+        </button>
+        <button class="btn-action-sec btn-action-danger" onclick="GimmyApp.limparLista()">
+          <span>🗑️</span>
+          <span>Limpar Lista</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ==========================================
+         2. MÓDULO DE CONFIGURAÇÃO (Alma do Sistema)
+         ========================================== -->
+    <section id="moduleConfig" class="module-view">
+
+      <!-- Sub-abas de Configuração -->
+      <div class="config-tabs">
+        <button class="config-tab-btn active" onclick="GimmyApp.switchConfigTab('produtos', this)">🏷️ Produtos</button>
+        <button class="config-tab-btn" onclick="GimmyApp.switchConfigTab('grupos', this)">🗂️ Grupos</button>
+        <button class="config-tab-btn" onclick="GimmyApp.switchConfigTab('apresentacoes', this)">📐 Apresentações</button>
+        <button class="config-tab-btn" onclick="GimmyApp.switchConfigTab('supermercados', this)">🏪 Mercados</button>
+        <button class="config-tab-btn" onclick="GimmyApp.switchConfigTab('dados', this)">💾 Dados</button>
+      </div>
+
+      <!-- Sub-Aba: Cadastro de Produtos -->
+      <div id="tabProdutos" class="config-subview active">
+        <div class="config-card">
+          <h3 class="config-card-title">➕ Cadastrar Novo Produto</h3>
+          <form id="formNovoProduto" onsubmit="GimmyApp.salvarNovoProduto(event)">
+            <div class="form-group">
+              <label class="form-label">Nome Comercial do Produto *</label>
+              <input type="text" id="novoProdNome" class="form-input" placeholder="Ex: Detergente Ypê Coco" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Marcas / Palavras-chave de Busca (separadas por vírgula)</label>
+              <input type="text" id="novoProdMarcas" class="form-input" placeholder="Ex: Ypê, Coco, Detergente">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Grupo de Mercadoria *</label>
+                <select id="novoProdGrupo" class="form-select" required></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Apresentação Padrão *</label>
+                <select id="novoProdApres" class="form-select" required></select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Salvar Produto no Catálogo</button>
+          </form>
+        </div>
+
+        <div class="config-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 class="config-card-title" style="margin-bottom: 0;">📦 Produtos Cadastrados</h3>
+            <span id="totalProdutosBadge" class="brand-badge" style="background:#059669; color:white;">0</span>
+          </div>
+          <div id="listaProdutosCadastrados" style="max-height: 340px; overflow-y: auto;">
+            <!-- Itens -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub-Aba: Grupos de Mercadorias -->
+      <div id="tabGrupos" class="config-subview">
+        <div class="config-card">
+          <h3 class="config-card-title">➕ Cadastrar Novo Grupo</h3>
+          <form id="formNovoGrupo" onsubmit="GimmyApp.salvarNovoGrupo(event)">
+            <div class="form-row">
+              <div class="form-group" style="flex: 0 0 70px;">
+                <label class="form-label">Ícone</label>
+                <input type="text" id="novoGrupoIcone" class="form-input" value="📦" style="text-align: center;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nome do Grupo *</label>
+                <input type="text" id="novoGrupoNome" class="form-input" placeholder="Ex: Utilidades Domésticas" required>
+              </div>
+            </div>
+            <button type="submit" class="btn-submit">Adicionar Grupo</button>
+          </form>
+        </div>
+
+        <div class="config-card">
+          <h3 class="config-card-title">🗂️ Grupos Atuais</h3>
+          <div id="listaGruposCadastrados"></div>
+        </div>
+      </div>
+
+      <!-- Sub-Aba: Apresentações -->
+      <div id="tabApresentacoes" class="config-subview">
+        <div class="config-card">
+          <h3 class="config-card-title">➕ Cadastrar Nova Apresentação</h3>
+          <form id="formNovaApres" onsubmit="GimmyApp.salvarNovaApresentacao(event)">
+            <div class="form-row">
+              <div class="form-group" style="flex: 0 0 90px;">
+                <label class="form-label">Sigla *</label>
+                <input type="text" id="novaApresSigla" class="form-input" placeholder="Ex: Pct" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nome Completo *</label>
+                <input type="text" id="novaApresNome" class="form-input" placeholder="Ex: Pacote" required>
+              </div>
+            </div>
+            <button type="submit" class="btn-submit">Adicionar Apresentação</button>
+          </form>
+        </div>
+
+        <div class="config-card">
+          <h3 class="config-card-title">📐 Apresentações Disponíveis</h3>
+          <div id="listaApresentacoesCadastradas"></div>
+        </div>
+      </div>
+
+      <!-- Sub-Aba: Supermercados & Roteiro -->
+      <div id="tabSupermercados" class="config-subview">
+        <div class="config-card">
+          <h3 class="config-card-title">➕ Cadastrar Novo Supermercado</h3>
+          <form id="formNovoSM" onsubmit="GimmyApp.salvarNovoSupermercado(event)">
+            <div class="form-group">
+              <label class="form-label">Nome Popular do Supermercado *</label>
+              <input type="text" id="novoSMNome" class="form-input" placeholder="Ex: Pão de Açúcar - Bairro" required>
+            </div>
+            <button type="submit" class="btn-submit">Cadastrar Supermercado</button>
+          </form>
+        </div>
+
+        <div class="config-card">
+          <h3 class="config-card-title">🏪 Roteiro de Corredores do Supermercado</h3>
+          <div class="form-group">
+            <label class="form-label">Selecione o Supermercado para Ajustar o Roteiro:</label>
+            <select id="configSMSelect" class="form-select" onchange="GimmyApp.carregarRoteiroSupermercado(this.value)">
+              <!-- Preenchido dinamicamente -->
+            </select>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">
+            Use as setas para definir a ordem que você percorre os corredores nesta loja. Sua lista de compras se organizará nessa sequência!
+          </p>
+          <ul id="routeOrderList" class="route-order-list">
+            <!-- Itens de grupo para reordenação -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Sub-Aba: Dados e Backup -->
+      <div id="tabDados" class="config-subview">
+        <div class="config-card">
+          <h3 class="config-card-title">💾 Backup & Restauração</h3>
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+            Seus dados ficam 100% salvos no seu aparelho. Você pode exportar uma cópia para outro celular ou restaurar a qualquer momento.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="btn-action-sec" onclick="GimmyApp.exportarDados()">
+              <span>📥 Exportar Backup (Arquivo JSON)</span>
+            </button>
+            <label class="btn-action-sec" style="cursor: pointer; text-align: center;">
+              <span>📤 Importar Backup JSON</span>
+              <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="GimmyApp.importarDados(event)">
+            </label>
+            <button class="btn-action-sec btn-action-danger" onclick="GimmyApp.restaurarFabrica()">
+              <span>⚠️ Restaurar Carga Inicial de Fábrica</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Notificação Toast -->
+  <div id="toastNotice" class="toast-notice"></div>
+
+  <!-- Scripts -->
+  <script src="js/seed-data.js"></script>
+  <script src="js/fuzzy.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Registro de Service Worker para PWA Offline -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => {
+          console.log('SW registration error (offline local ativo):', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
+
