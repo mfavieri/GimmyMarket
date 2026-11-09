@@ -172,9 +172,9 @@ const GimmyApp = {
                 <input type="text" class="qty-input" value="1" readonly>
                 <button class="qty-btn" onclick="GimmyApp.alterarInputQty(this, 1)">+</button>
               </div>
-              <span class="item-badge-apres" style="font-weight: 700;">${apres.sigla}</span>
+              <span class="unit-text-plain">${apres.sigla}</span>
               <button class="btn-add-item" onclick="GimmyApp.adicionarItemNaLista('${prod.id}', this)" title="Clique para adicionar à lista de compras">
-                <span>➕ Adicionar</span>
+                <span>➕ Adicionar à lista</span>
               </button>
             </div>
           </div>
@@ -445,9 +445,9 @@ const GimmyApp = {
                   <input type="text" class="qty-input" value="1" readonly>
                   <button class="qty-btn" onclick="GimmyApp.alterarInputQty(this, 1)">+</button>
                 </div>
-                <span class="item-badge-apres" style="font-weight: 700;">${apres.sigla}</span>
-                <button class="btn-add-item" onclick="GimmyApp.adicionarItemNaLista('${prod.id}', this)" title="Adicionar à lista">
-                  <span>➕ Adicionar</span>
+                <span class="unit-text-plain">${apres.sigla}</span>
+                <button class="btn-add-item" onclick="GimmyApp.adicionarItemNaLista('${prod.id}', this)" title="Adicionar à lista de compras">
+                  <span>➕ Adicionar à lista</span>
                 </button>
               </div>
             </div>
