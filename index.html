@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" href="icons/favicon.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <title>GimmyMarket - Compras Inteligentes</title>
-  <link rel="stylesheet" href="css/style.css?v=8">
+  <link rel="stylesheet" href="css/style.css?v=9">
 </head>
 <body>
 
@@ -324,16 +324,16 @@
   <div id="toastNotice" class="toast-notice"></div>
 
   <!-- Scripts Versionados para Atualização Imediata -->
-  <script src="js/seed-data.js?v=8"></script>
-  <script src="js/fuzzy.js?v=8"></script>
-  <script src="js/db.js?v=8"></script>
-  <script src="js/app.js?v=8"></script>
+  <script src="js/seed-data.js?v=9"></script>
+  <script src="js/fuzzy.js?v=9"></script>
+  <script src="js/db.js?v=9"></script>
+  <script src="js/app.js?v=9"></script>
 
   <!-- Registro de Service Worker com Atualização Forçada -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js?v=8').then(reg => {
+        navigator.serviceWorker.register('sw.js?v=9').then(reg => {
           reg.onupdatefound = () => {
             const installing = reg.installing;
             if (installing) {

@@ -155,6 +155,7 @@ const GimmyApp = {
       const grupo = this.gruposMap[prod.grupoId] || { nome: 'Geral', icone: '📦' };
       const apres = this.apresMap[prod.apresId] || { sigla: 'Un' };
       const marcas = (prod.marcas && prod.marcas.length > 0) ? `• ${prod.marcas.join(', ')}` : '';
+      const eanInfo = prod.ean ? `<span style="color:#64748b; font-size:0.72rem; font-family:monospace;">• EAN: ${prod.ean}</span>` : '';
 
       return `
         <div class="search-result-row" data-prod-id="${prod.id}">
@@ -164,6 +165,7 @@ const GimmyApp = {
               <div class="res-prod-meta">
                 <span><b>${grupo.nome}</b></span>
                 <span>${marcas}</span>
+                ${eanInfo}
               </div>
             </div>
             <div class="res-prod-actions">
@@ -428,6 +430,7 @@ const GimmyApp = {
       container.innerHTML = prodsDoGrupo.map(prod => {
         const apres = this.apresMap[prod.apresId] || { sigla: 'Un' };
         const marcas = (prod.marcas && prod.marcas.length > 0) ? `• ${prod.marcas.join(', ')}` : '';
+        const eanInfo = prod.ean ? `<span style="color:#64748b; font-size:0.72rem; font-family:monospace;">• EAN: ${prod.ean}</span>` : '';
 
         return `
           <div class="search-result-row" data-prod-id="${prod.id}">
@@ -437,6 +440,7 @@ const GimmyApp = {
                 <div class="res-prod-meta">
                   <span>${grupo.nome}</span>
                   <span>${marcas}</span>
+                  ${eanInfo}
                 </div>
               </div>
               <div class="res-prod-actions">

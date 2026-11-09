@@ -100,6 +100,15 @@ const GimmySearch = {
     const results = [];
 
     for (const prod of produtos) {
+      // Se a busca for numérica (código de barras EAN)
+      if (prod.ean && /^\d+$/.test(qNorm) && prod.ean.includes(qNorm)) {
+        results.push({
+          produto: prod,
+          score: prod.ean === qNorm ? 120 : 90
+        });
+        continue;
+      }
+
       const nomeNorm = this.normalize(prod.nome);
       const marcasNorm = (prod.marcas || []).map(m => this.normalize(m)).join(' ');
       const grupoObj = gruposMap[prod.grupoId];

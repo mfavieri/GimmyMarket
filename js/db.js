@@ -42,7 +42,7 @@ const GimmyDB = {
     });
   },
 
-  seedVersion: 'mundial_v3',
+  seedVersion: 'mundial_v4',
 
   async checkSeedData() {
     const produtos = await this.getAll('produtos');
