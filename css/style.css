@@ -584,21 +584,25 @@ body {
 }
 
 .btn-add-reminder {
-  display: inline-block;
-  margin-top: 4px;
-  background: none;
-  border: none;
-  font-size: 0.74rem;
-  color: #64748b;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  background: #f8fafc;
+  border: 1px dashed #94a3b8;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #475569;
   cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 4px;
-  text-decoration: underline;
-  text-decoration-style: dashed;
+  transition: all 0.2s ease;
 }
 
 .btn-add-reminder:hover {
-  color: var(--primary-dark);
+  background: #fefce8;
+  border-color: #eab308;
+  color: #713f12;
 }
 
 .item-right {

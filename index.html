@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" href="icons/favicon.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <title>GimmyMarket - Compras Inteligentes</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
 
@@ -290,18 +290,30 @@
   <!-- Notificação Toast -->
   <div id="toastNotice" class="toast-notice"></div>
 
-  <!-- Scripts -->
-  <script src="js/seed-data.js"></script>
-  <script src="js/fuzzy.js"></script>
-  <script src="js/db.js"></script>
-  <script src="js/app.js"></script>
+  <!-- Scripts Versionados para Atualização Imediata -->
+  <script src="js/seed-data.js?v=6"></script>
+  <script src="js/fuzzy.js?v=6"></script>
+  <script src="js/db.js?v=6"></script>
+  <script src="js/app.js?v=6"></script>
 
-  <!-- Registro de Service Worker para PWA Offline -->
+  <!-- Registro de Service Worker com Atualização Forçada -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(err => {
-          console.log('SW registration error (offline local ativo):', err);
+        navigator.serviceWorker.register('sw.js?v=6').then(reg => {
+          reg.onupdatefound = () => {
+            const installing = reg.installing;
+            if (installing) {
+              installing.onstatechange = () => {
+                if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('🔄 Nova versão do GimmyMarket instalada! Recarregando...');
+                  window.location.reload();
+                }
+              };
+            }
+          };
+        }).catch(err => {
+          console.log('SW error:', err);
         });
       });
     }
