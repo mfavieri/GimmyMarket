@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" href="icons/favicon.png">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <title>GimmyMarket - Compras Inteligentes</title>
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
 
@@ -65,6 +65,39 @@
         <!-- Painel de Resultados da Busca -->
         <div id="searchResultsPanel" class="search-results-panel">
           <!-- Injetado dinamicamente via JS -->
+        </div>
+      </div>
+
+      <!-- Carrossel de Departamentos (Explorar Todos os Produtos da Loja) -->
+      <div class="departments-bar-card">
+        <div class="departments-header">
+          <div class="dept-header-title">
+            <span>📂</span>
+            <span>Ver Produtos por Corredor:</span>
+          </div>
+          <button class="btn-toggle-catalog" id="btnToggleCatalog" onclick="GimmyApp.toggleCatalogView()">
+            <span>👁️ Ver Todos</span>
+          </button>
+        </div>
+        <div class="departments-chips-scroll" id="departmentsChipsContainer">
+          <!-- Chips gerados via JS -->
+        </div>
+      </div>
+
+      <!-- Painel Explorador de Catálogo de Produtos -->
+      <div id="catalogExplorerPanel" class="catalog-explorer-panel" style="display: none;">
+        <div class="catalog-panel-header">
+          <div class="catalog-title-group">
+            <span id="catalogActiveGroupIcon" style="font-size: 1.3rem;">🍎</span>
+            <div>
+              <div id="catalogActiveGroupName" style="font-weight: 800; font-size: 1rem; color: var(--text-main);">Hortifrúti</div>
+              <div id="catalogActiveGroupCount" style="font-size: 0.75rem; color: var(--text-muted);">0 produtos disponíveis</div>
+            </div>
+          </div>
+          <button class="btn-close-catalog" onclick="GimmyApp.fecharCatalogo()">✕ Fechar</button>
+        </div>
+        <div id="catalogProductsList" class="catalog-products-list">
+          <!-- Lista de produtos do departamento -->
         </div>
       </div>
 
@@ -291,16 +324,16 @@
   <div id="toastNotice" class="toast-notice"></div>
 
   <!-- Scripts Versionados para Atualização Imediata -->
-  <script src="js/seed-data.js?v=6"></script>
-  <script src="js/fuzzy.js?v=6"></script>
-  <script src="js/db.js?v=6"></script>
-  <script src="js/app.js?v=6"></script>
+  <script src="js/seed-data.js?v=7"></script>
+  <script src="js/fuzzy.js?v=7"></script>
+  <script src="js/db.js?v=7"></script>
+  <script src="js/app.js?v=7"></script>
 
   <!-- Registro de Service Worker com Atualização Forçada -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js?v=6').then(reg => {
+        navigator.serviceWorker.register('sw.js?v=7').then(reg => {
           reg.onupdatefound = () => {
             const installing = reg.installing;
             if (installing) {

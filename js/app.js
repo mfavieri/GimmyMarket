@@ -21,6 +21,7 @@ const GimmyApp = {
       await this.carregarDadosBase();
       this.bindEvents();
       this.renderSupermarketSelectors();
+      this.renderDepartmentsChips();
       this.renderShoppingList();
       this.carregarListagensConfig();
     } catch (err) {
@@ -161,7 +162,7 @@ const GimmyApp = {
             <div class="res-prod-info">
               <div class="res-prod-nome">${grupo.icone} ${prod.nome}</div>
               <div class="res-prod-meta">
-                <span>${grupo.nome}</span>
+                <span><b>${grupo.nome}</b></span>
                 <span>${marcas}</span>
               </div>
             </div>
@@ -171,9 +172,9 @@ const GimmyApp = {
                 <input type="text" class="qty-input" value="1" readonly>
                 <button class="qty-btn" onclick="GimmyApp.alterarInputQty(this, 1)">+</button>
               </div>
-              <button class="btn-add-item" onclick="GimmyApp.adicionarItemNaLista('${prod.id}', this)">
-                <span>➕</span>
-                <span>${apres.sigla}</span>
+              <span class="item-badge-apres" style="font-weight: 700;">${apres.sigla}</span>
+              <button class="btn-add-item" onclick="GimmyApp.adicionarItemNaLista('${prod.id}', this)" title="Clique para adicionar à lista de compras">
+                <span>➕ Adicionar</span>
               </button>
             </div>
           </div>
@@ -181,7 +182,7 @@ const GimmyApp = {
             <input 
               type="text" 
               class="res-reminder-input" 
-              placeholder="📝 Lembrete opcional (ex: Parboilizado Tio João, para pizza, etc.)..."
+              placeholder="📝 Lembrete opcional para esta compra (ex: Parboilizado Tio João, para pizza, marca preferida...)"
               onkeydown="if(event.key==='Enter') { const btn = this.closest('.search-result-row').querySelector('.btn-add-item'); if(btn) btn.click(); }"
             >
           </div>
@@ -339,6 +340,7 @@ const GimmyApp = {
     this.supermercadoAtivoId = smId;
     this.listaAtiva.supermercadoId = smId;
     await GimmyDB.salvarListaAtiva(this.listaAtiva);
+    this.renderDepartmentsChips();
     this.renderShoppingList();
     const sm = this.supermercados.find(s => s.id === smId);
     this.showToast(`Roteiro ajustado para: ${sm ? sm.nome : 'Padrão'}`);
@@ -355,6 +357,115 @@ const GimmyApp = {
 
     if (selectCompra) selectCompra.innerHTML = optionsHtml;
     if (selectConfig) selectConfig.innerHTML = optionsHtml;
+  },
+
+  // ==========================================
+  // Carrossel de Departamentos & Navegação por Catálogo
+  // ==========================================
+  renderDepartmentsChips() {
+    const container = document.getElementById('departmentsChipsContainer');
+    if (!container) return;
+
+    const smAtivo = this.supermercados.find(s => s.id === this.supermercadoAtivoId) || this.supermercados[0];
+    const ordemGrupos = (smAtivo && smAtivo.ordemGrupos) ? smAtivo.ordemGrupos : this.grupos.map(g => g.id);
+
+    container.innerHTML = ordemGrupos.map(grupoId => {
+      const g = this.gruposMap[grupoId];
+      if (!g) return '';
+      return `
+        <button class="dept-chip" onclick="GimmyApp.abrirDepartamentoCatalogo('${g.id}', this)" title="Ver produtos de ${g.nome}">
+          <span>${g.icone}</span>
+          <span>${g.nome}</span>
+        </button>
+      `;
+    }).join('');
+  },
+
+  toggleCatalogView() {
+    const panel = document.getElementById('catalogExplorerPanel');
+    if (!panel) return;
+    if (panel.style.display === 'block') {
+      this.fecharCatalogo();
+    } else {
+      const primeiroGrupo = (this.supermercados.find(s => s.id === this.supermercadoAtivoId)?.ordemGrupos?.[0]) || this.grupos[0]?.id || 'hortifruti';
+      this.abrirDepartamentoCatalogo(primeiroGrupo);
+    }
+  },
+
+  fecharCatalogo() {
+    const panel = document.getElementById('catalogExplorerPanel');
+    if (panel) panel.style.display = 'none';
+    document.querySelectorAll('.dept-chip').forEach(c => c.classList.remove('active'));
+  },
+
+  abrirDepartamentoCatalogo(grupoId, chipBtn) {
+    const panel = document.getElementById('catalogExplorerPanel');
+    const container = document.getElementById('catalogProductsList');
+    const titleNome = document.getElementById('catalogActiveGroupName');
+    const titleIcon = document.getElementById('catalogActiveGroupIcon');
+    const titleCount = document.getElementById('catalogActiveGroupCount');
+
+    if (!panel || !container) return;
+
+    const grupo = this.gruposMap[grupoId] || { nome: 'Geral', icone: '📦' };
+    const prodsDoGrupo = this.produtos.filter(p => p.grupoId === grupoId);
+
+    titleNome.textContent = grupo.nome;
+    titleIcon.textContent = grupo.icone;
+    titleCount.textContent = `${prodsDoGrupo.length} produtos disponíveis`;
+
+    document.querySelectorAll('.dept-chip').forEach(c => c.classList.remove('active'));
+    if (chipBtn) {
+      chipBtn.classList.add('active');
+    } else {
+      const matchingChip = Array.from(document.querySelectorAll('.dept-chip')).find(c => c.textContent.includes(grupo.nome));
+      if (matchingChip) matchingChip.classList.add('active');
+    }
+
+    if (prodsDoGrupo.length === 0) {
+      container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Nenhum produto cadastrado neste departamento.</div>';
+    } else {
+      container.innerHTML = prodsDoGrupo.map(prod => {
+        const apres = this.apresMap[prod.apresId] || { sigla: 'Un' };
+        const marcas = (prod.marcas && prod.marcas.length > 0) ? `• ${prod.marcas.join(', ')}` : '';
+
+        return `
+          <div class="search-result-row" data-prod-id="${prod.id}">
+            <div class="search-result-item">
+              <div class="res-prod-info">
+                <div class="res-prod-nome">${grupo.icone} ${prod.nome}</div>
+                <div class="res-prod-meta">
+                  <span>${grupo.nome}</span>
+                  <span>${marcas}</span>
+                </div>
+              </div>
+              <div class="res-prod-actions">
+                <div class="qty-stepper">
+                  <button class="qty-btn" onclick="GimmyApp.alterarInputQty(this, -1)">-</button>
+                  <input type="text" class="qty-input" value="1" readonly>
+                  <button class="qty-btn" onclick="GimmyApp.alterarInputQty(this, 1)">+</button>
+                </div>
+                <span class="item-badge-apres" style="font-weight: 700;">${apres.sigla}</span>
+                <button class="btn-add-item" onclick="GimmyApp.adicionarItemNaLista('${prod.id}', this)" title="Adicionar à lista">
+                  <span>➕ Adicionar</span>
+                </button>
+              </div>
+            </div>
+            <div class="res-prod-reminder-box">
+              <input 
+                type="text" 
+                class="res-reminder-input" 
+                placeholder="📝 Lembrete opcional para esta compra (ex: marca preferida, ponto, sabor...)"
+                onkeydown="if(event.key==='Enter') { const btn = this.closest('.search-result-row').querySelector('.btn-add-item'); if(btn) btn.click(); }"
+              >
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   },
 
   renderShoppingList() {
