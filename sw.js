@@ -1,6 +1,6 @@
 // GimmyMarket - Service Worker (Cache First para Funcionamento 100% Offline)
 
-const CACHE_NAME = 'gimmymarket-v3';
+const CACHE_NAME = 'gimmymarket-v4';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

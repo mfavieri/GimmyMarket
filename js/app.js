@@ -156,24 +156,34 @@ const GimmyApp = {
       const marcas = (prod.marcas && prod.marcas.length > 0) ? `• ${prod.marcas.join(', ')}` : '';
 
       return `
-        <div class="search-result-item" data-prod-id="${prod.id}">
-          <div class="res-prod-info">
-            <div class="res-prod-nome">${grupo.icone} ${prod.nome}</div>
-            <div class="res-prod-meta">
-              <span>${grupo.nome}</span>
-              <span>${marcas}</span>
+        <div class="search-result-row" data-prod-id="${prod.id}">
+          <div class="search-result-item">
+            <div class="res-prod-info">
+              <div class="res-prod-nome">${grupo.icone} ${prod.nome}</div>
+              <div class="res-prod-meta">
+                <span>${grupo.nome}</span>
+                <span>${marcas}</span>
+              </div>
+            </div>
+            <div class="res-prod-actions">
+              <div class="qty-stepper">
+                <button class="qty-btn" onclick="GimmyApp.alterarInputQty(this, -1)">-</button>
+                <input type="text" class="qty-input" value="1" readonly>
+                <button class="qty-btn" onclick="GimmyApp.alterarInputQty(this, 1)">+</button>
+              </div>
+              <button class="btn-add-item" onclick="GimmyApp.adicionarItemNaLista('${prod.id}', this)">
+                <span>➕</span>
+                <span>${apres.sigla}</span>
+              </button>
             </div>
           </div>
-          <div class="res-prod-actions">
-            <div class="qty-stepper">
-              <button class="qty-btn" onclick="GimmyApp.alterarInputQty(this, -1)">-</button>
-              <input type="text" class="qty-input" value="1" readonly>
-              <button class="qty-btn" onclick="GimmyApp.alterarInputQty(this, 1)">+</button>
-            </div>
-            <button class="btn-add-item" onclick="GimmyApp.adicionarItemNaLista('${prod.id}', this)">
-              <span>➕</span>
-              <span>${apres.sigla}</span>
-            </button>
+          <div class="res-prod-reminder-box">
+            <input 
+              type="text" 
+              class="res-reminder-input" 
+              placeholder="📝 Lembrete opcional (ex: Parboilizado Tio João, para pizza, etc.)..."
+              onkeydown="if(event.key==='Enter') { const btn = this.closest('.search-result-row').querySelector('.btn-add-item'); if(btn) btn.click(); }"
+            >
           </div>
         </div>
       `;
@@ -214,9 +224,17 @@ const GimmyApp = {
     if (!prod) return;
 
     let quantidade = 1;
+    let lembrete = '';
+
     if (triggerBtn) {
-      const stepper = triggerBtn.closest('.search-result-item')?.querySelector('.qty-input');
+      const parentRow = triggerBtn.closest('.search-result-row') || triggerBtn.closest('.search-result-item');
+      const stepper = parentRow?.querySelector('.qty-input');
       if (stepper) quantidade = parseInt(stepper.value, 10) || 1;
+
+      const inputLem = parentRow?.querySelector('.res-reminder-input');
+      if (inputLem && inputLem.value.trim()) {
+        lembrete = inputLem.value.trim();
+      }
     }
 
     if (!this.listaAtiva.itens) this.listaAtiva.itens = [];
@@ -225,6 +243,7 @@ const GimmyApp = {
     const itemExistente = this.listaAtiva.itens.find(i => i.produtoId === produtoId);
     if (itemExistente) {
       itemExistente.quantidade += quantidade;
+      if (lembrete) itemExistente.lembrete = lembrete;
       this.showToast(`+${quantidade} adicionado a ${prod.nome}`);
     } else {
       this.listaAtiva.itens.push({
@@ -234,6 +253,7 @@ const GimmyApp = {
         grupoId: prod.grupoId,
         apresId: prod.apresId,
         quantidade: quantidade,
+        lembrete: lembrete,
         comprado: false,
         adicionadoEm: new Date().toISOString()
       });
@@ -441,6 +461,7 @@ const GimmyApp = {
   renderItemHtml(item) {
     const apres = this.apresMap[item.apresId] || { sigla: 'Un' };
     const purchasedClass = item.comprado ? 'purchased' : '';
+    const temLembrete = item.lembrete && item.lembrete.trim().length > 0;
 
     return `
       <div class="shopping-item ${purchasedClass}" id="item_card_${item.id}">
@@ -454,6 +475,19 @@ const GimmyApp = {
               <span class="item-badge-apres">${item.quantidade} ${apres.sigla}</span>
               <span>${item.comprado ? '• No carrinho 🛒' : '• Toque para ticar'}</span>
             </div>
+            ${temLembrete ? `
+              <div class="item-reminder-tag" onclick="event.stopPropagation(); GimmyApp.editarLembreteItem('${item.id}')" title="Toque para alterar este lembrete">
+                <span class="rem-icon">📝</span>
+                <span class="rem-text"><b>Lembrete:</b> ${this.escapeHtml(item.lembrete)}</span>
+                <span class="rem-edit">✏️</span>
+              </div>
+            ` : `
+              <div>
+                <button class="btn-add-reminder" onclick="event.stopPropagation(); GimmyApp.editarLembreteItem('${item.id}')" title="Adicionar lembrete ou marca preferida">
+                  + 📝 Lembrete
+                </button>
+              </div>
+            `}
           </div>
         </div>
         <div class="item-right">
@@ -468,6 +502,35 @@ const GimmyApp = {
         </div>
       </div>
     `;
+  },
+
+  async editarLembreteItem(itemId) {
+    const item = this.listaAtiva.itens.find(i => i.id === itemId);
+    if (!item) return;
+
+    const valorAtual = item.lembrete || '';
+    const novo = prompt(`📝 Lembrete para "${item.nome}":\n(ex: marcas preferidas, ponto da carne, sabor...)`, valorAtual);
+
+    if (novo !== null) {
+      item.lembrete = novo.trim();
+      await GimmyDB.salvarListaAtiva(this.listaAtiva);
+      this.renderShoppingList();
+      if (item.lembrete) {
+        this.showToast(`📝 Lembrete atualizado!`);
+      } else {
+        this.showToast(`Lembrete removido.`);
+      }
+    }
+  },
+
+  escapeHtml(str) {
+    if (!str) return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   },
 
   compartilharLista() {
@@ -494,7 +557,11 @@ const GimmyApp = {
       for (const item of itensPorGrupo[grupoId]) {
         const apres = this.apresMap[item.apresId] || { sigla: 'Un' };
         const check = item.comprado ? '✅' : '⬜';
-        texto += `${check} ${item.quantidade} ${apres.sigla} - ${item.nome}\n`;
+        let linha = `${check} ${item.quantidade} ${apres.sigla} - ${item.nome}`;
+        if (item.lembrete && item.lembrete.trim()) {
+          linha += `\n   ↳ 📝 *Lembrete:* ${item.lembrete.trim()}`;
+        }
+        texto += `${linha}\n`;
       }
       texto += `\n`;
     }

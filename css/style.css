@@ -213,13 +213,49 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
+  padding: 10px 14px 6px;
   gap: 12px;
 }
 
-.search-result-item:last-child {
+.search-result-row {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+
+.search-result-row:hover {
+  background: #fbfdfc;
+}
+
+.search-result-row:last-child {
   border-bottom: none;
+}
+
+.res-prod-reminder-box {
+  padding: 0 14px 10px;
+}
+
+.res-reminder-input {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius-sm);
+  background: #f8fafc;
+  outline: none;
+  color: var(--text-main);
+  transition: all 0.2s ease;
+}
+
+.res-reminder-input:focus {
+  border-color: var(--primary);
+  border-style: solid;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+.res-reminder-input::placeholder {
+  color: #94a3b8;
+  font-style: italic;
 }
 
 .res-prod-info {
@@ -509,6 +545,60 @@ body {
   border-radius: 4px;
   font-weight: 600;
   color: #334155;
+}
+
+/* Lembrete / Observação do Item na Lista */
+.item-reminder-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 4px 10px;
+  background: #fefce8;
+  border: 1px solid #fef08a;
+  border-left: 3px solid #eab308;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #713f12;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  word-break: break-word;
+}
+
+.item-reminder-tag:hover {
+  background: #fef9c3;
+  border-color: #facc15;
+}
+
+.item-reminder-tag .rem-icon {
+  font-size: 0.85rem;
+}
+
+.item-reminder-tag .rem-text {
+  flex: 1;
+}
+
+.item-reminder-tag .rem-edit {
+  font-size: 0.72rem;
+  opacity: 0.6;
+}
+
+.btn-add-reminder {
+  display: inline-block;
+  margin-top: 4px;
+  background: none;
+  border: none;
+  font-size: 0.74rem;
+  color: #64748b;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  text-decoration: underline;
+  text-decoration-style: dashed;
+}
+
+.btn-add-reminder:hover {
+  color: var(--primary-dark);
 }
 
 .item-right {
