@@ -1,6 +1,6 @@
 // GimmyMarket - Service Worker (Cache First para Funcionamento 100% Offline)
 
-const CACHE_NAME = 'gimmymarket-v2';
+const CACHE_NAME = 'gimmymarket-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -10,7 +10,9 @@ const ASSETS_TO_CACHE = [
   './js/fuzzy.js',
   './js/db.js',
   './js/app.js',
-  './icons/icon.svg'
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/favicon.png'
 ];
 
 self.addEventListener('install', (event) => {
