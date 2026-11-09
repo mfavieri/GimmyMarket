@@ -7,7 +7,7 @@ const GimmyApp = {
   produtos: [],
   supermercados: [],
   listaAtiva: null,
-  supermercadoAtivoId: 'sm_padrao',
+  supermercadoAtivoId: 'sm_mundial',
   filtroAtual: 'todos', // 'todos', 'pendentes', 'carrinho'
 
   // Mapas para lookup rápido O(1)

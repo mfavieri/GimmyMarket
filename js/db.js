@@ -42,11 +42,16 @@ const GimmyDB = {
     });
   },
 
+  seedVersion: 'mundial_v2',
+
   async checkSeedData() {
     const produtos = await this.getAll('produtos');
-    if (!produtos || produtos.length === 0) {
-      console.log('🌱 Primeira inicialização: aplicando carga inicial do GimmyMarket...');
+    const versaoAtual = localStorage.getItem('gimmymarket_seed_version');
+
+    if (!produtos || produtos.length === 0 || versaoAtual !== this.seedVersion) {
+      console.log('🌱 Atualizando dados do GimmyMarket para o catálogo do Supermercados Mundial...');
       await this.carregarCargaInicial();
+      localStorage.setItem('gimmymarket_seed_version', this.seedVersion);
     }
   },
 
@@ -77,15 +82,19 @@ const GimmyDB = {
       prodStore.put(p);
     }
 
-    // Lista ativa inicial vazia
+    // Mantém ou cria lista ativa padrão com Supermercados Mundial
     const listaStore = tx.objectStore('listas');
-    listaStore.put({
-      id: 'lista_ativa',
-      nome: 'Minha Lista de Compras',
-      supermercadoId: 'sm_padrao',
-      atualizadoEm: new Date().toISOString(),
-      itens: []
-    });
+    const listaReq = listaStore.get('lista_ativa');
+    listaReq.onsuccess = () => {
+      const listaAtual = listaReq.result;
+      listaStore.put({
+        id: 'lista_ativa',
+        nome: 'Minha Lista de Compras',
+        supermercadoId: 'sm_mundial',
+        atualizadoEm: new Date().toISOString(),
+        itens: (listaAtual && listaAtual.itens) ? listaAtual.itens : []
+      });
+    };
 
     return new Promise((resolve, reject) => {
       tx.oncomplete = () => resolve();
